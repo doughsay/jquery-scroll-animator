@@ -1,0 +1,27 @@
+body {
+	background-color: black;
+	font-family: sans-serif;
+}
+
+h1 {
+	font-size: x-large;
+	text-align: center;
+}
+
+h2 {
+	font-size: large;
+	text-align: center;
+}
+
+p {
+	text-align: justify;
+}
+
+#Container {
+	margin: 0 auto;
+	width: 600px;
+	border: 5px solid #808080;
+	background-color: rgb(64,64,255);
+	padding: 20px;
+}
+
