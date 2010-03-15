@@ -55,12 +55,12 @@ var ScrollAnimator = function(definitions) {
 	
 	/// Animation Methods ///
 	
-	function animate(selector, attribute, options) {
-		if(/color/i.test(attribute)) animateColor(selector, attribute, options);
-		else animateValue(selector, attribute, options);
+	function animate(attribute, options) {
+		if(/color/i.test(attribute)) return animateColor(attribute, options);
+		else return animateValue(attribute, options);
 	}
 	
-	function animateColor(selector, attribute, options) {
+	function animateColor(attribute, options) {
 		var start = getColorFromString(options.start);
 		var end = getColorFromString(options.end);
 		var c = {
@@ -68,14 +68,12 @@ var ScrollAnimator = function(definitions) {
 			g: Math.round(val(start.g, end.g)),
 			b: Math.round(val(start.b, end.b))
 		}
-		var css = {};
-		css[attribute] = 'rgb('+c.r+','+c.g+','+c.b+')';
-		$(selector).css(css); // NOTE:  let's see if we can pre-query all the selectors
-													 //				 so we don't run the same query over and over
+		return 'rgb('+c.r+','+c.g+','+c.b+')';
 	}
 	
-	function animateValue(selector, attribute, options) {
+	function animateValue(attribute, options) {
 		console.log('the numbers!');
+		return '';
 	}
 	
 	/// Scroll Callback ///
@@ -85,9 +83,11 @@ var ScrollAnimator = function(definitions) {
 		position = w.scrollTop() / height;
 		
 		$.each(definitions, function(selector, attributes) {
+			var css = {};
 			$.each(attributes, function(attribute, options) {
-				animate(selector, attribute, options);
+				css[attribute] = animate(attribute, options);
 			});
+			$(selector).css(css);
 		});
 		
 	}
@@ -102,7 +102,8 @@ var ScrollAnimator = function(definitions) {
 				css[attribute] = options.start;
 			});
 			console.log(selector, css);
-			$(selector).css(css);
+			$(selector).css(css); // NOTE:  let's see if we can pre-query all the selectors
+														 //				 so we don't run the same query over and over
 		});
 	}
 	
