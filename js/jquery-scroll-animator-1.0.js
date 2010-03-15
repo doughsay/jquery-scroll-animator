@@ -1,4 +1,4 @@
-var ScrollAnimator = function(definitions) {
+jQuery.fn.scrollAnimate = function(definitions) {
 	
 	/// Globals ///
 	var w = $(window), d = $(document),
@@ -116,53 +116,6 @@ var ScrollAnimator = function(definitions) {
 	}
 	
 	init();
-	$(window).scroll(onScroll);
+	this.scroll(onScroll);
 	
-}
-
-$(function() {
-	ScrollAnimator({
-		'body': {
-			backgroundColor: {
-				start: 'black',
-				end: 'rgb(255,165,0)'
-			},
-			color: {
-				start: '#000000',
-				end: 'orange'
-			}
-		},
-		'#Container': {
-			backgroundColor: {
-				start: 'dodgerblue',
-				end: 'black'
-			},
-			borderColor: {
-				start: 'rgb(100%,100%,100%)',
-				end: 'dodgerblue'
-			},
-			borderWidth: {
-				start: '5px',
-				end: '100px'
-			}
-		},
-		'h2': {
-			letterSpacing: {
-				start: '0px',
-				end: '40px'
-			}
-		}
-	});
-});
-
-// proposed future syntax:
-/*
-$(window).scrollAnimate({
-	'body': {
-		color: {
-			start: 'black',
-			end: 'white'
-		}
-	}
-});
-*/
+};
