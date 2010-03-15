@@ -2,8 +2,7 @@ var ScrollAnimator = function(definitions) {
 	
 	/// Globals ///
 	var w = $(window), d = $(document),
-	height, position, negPosition; 
-	
+	height, position;
 	
 	/// Utility functions ///
 	
@@ -14,9 +13,9 @@ var ScrollAnimator = function(definitions) {
 		var color = {r:0,g:0,b:0};
 		
 		var regex = {
-			hex: /#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/,
-			rgbi: /rgb\(([0-9]+),\s?([0-9]+),\s?([0-9]+)\)/,
-			rgbp: /rgb\(([0-9]+)%,\s?([0-9]+)%,\s?([0-9]+)%\)/
+			hex: /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/,
+			rgbi: /^rgb\(([0-9]+),\s?([0-9]+),\s?([0-9]+)\)$/,
+			rgbp: /^rgb\(([0-9]+)%,\s?([0-9]+)%,\s?([0-9]+)%\)$/
 		}
 		
 		string = string.toLowerCase();
@@ -24,20 +23,21 @@ var ScrollAnimator = function(definitions) {
 			string = colorNames[string];
 		
 		if(regex.hex.test(string)) {
-			color.r = parseInt('0x'+string.slice(1,3));
-			color.g = parseInt('0x'+string.slice(3,5));
-			color.b = parseInt('0x'+string.slice(5,7));
+			var matchData = regex.hex.exec(string);
+			color.r = parseInt('0x'+matchData[1]);
+			color.g = parseInt('0x'+matchData[2]);
+			color.b = parseInt('0x'+matchData[3]);
 		} else if(regex.rgbi.test(string)) {
-			var stuff = regex.rgbi.exec(string);
-			color.r = parseInt(stuff[1]);
-			color.g = parseInt(stuff[2]);
-			color.b = parseInt(stuff[3]);
+			var matchData = regex.rgbi.exec(string);
+			color.r = parseInt(matchData[1]);
+			color.g = parseInt(matchData[2]);
+			color.b = parseInt(matchData[3]);
 		} else if(regex.rgbp.test(string)) {
-			var stuff = regex.rgbp.exec(string);
-			color.r = Math.round(parseInt(stuff[1]) * 2.55);
-			color.g = Math.round(parseInt(stuff[2]) * 2.55);
-			color.b = Math.round(parseInt(stuff[3]) * 2.55);
-		}
+			var matchData = regex.rgbp.exec(string);
+			color.r = Math.round(parseInt(matchData[1]) * 2.55);
+			color.g = Math.round(parseInt(matchData[2]) * 2.55);
+			color.b = Math.round(parseInt(matchData[3]) * 2.55);
+		} else throw "Invalid color string: " + string;
 		return color;
 	}
 	
@@ -56,11 +56,11 @@ var ScrollAnimator = function(definitions) {
 	/// Animation Methods ///
 	
 	function animate(attribute, options) {
-		if(/color/i.test(attribute)) return animateColor(attribute, options);
-		else return animateValue(attribute, options);
+		if(/color/i.test(attribute)) return animateColor(options);
+		else return animateValue(options);
 	}
 	
-	function animateColor(attribute, options) {
+	function animateColor(options) {
 		var start = getColorFromString(options.start);
 		var end = getColorFromString(options.end);
 		var c = {
@@ -71,9 +71,20 @@ var ScrollAnimator = function(definitions) {
 		return 'rgb('+c.r+','+c.g+','+c.b+')';
 	}
 	
-	function animateValue(attribute, options) {
-		console.log('the numbers!');
-		return '';
+	function animateValue(options) {
+		var regex = /^([.0-9]+)(%|in|cm|mm|em|ex|pt|pc|px)$/
+		var startMatchData = regex.exec(options.start);
+		var startVal = parseInt(startMatchData[1]);
+		var startUnit = startMatchData[2];
+		var endMatchData = regex.exec(options.end);
+		var endVal = parseInt(endMatchData[1]);
+		var endUnit = endMatchData[2];
+		
+		if(startUnit !== endUnit)
+			throw "Sorry, I don't (yet) support unmatched units "
+				+ startUnit + " and " + endUnit;
+				
+		return Math.round(val(startVal, endVal)) + startUnit;
 	}
 	
 	/// Scroll Callback ///
@@ -95,15 +106,12 @@ var ScrollAnimator = function(definitions) {
 	/// Initialization ///
 	
 	function init() {
-		console.log('init!');
 		$.each(definitions, function(selector, attributes) {
 			var css = {};
 			$.each(attributes, function(attribute, options) {
 				css[attribute] = options.start;
 			});
-			console.log(selector, css);
-			$(selector).css(css); // NOTE:  let's see if we can pre-query all the selectors
-														 //				 so we don't run the same query over and over
+			$(selector).css(css);
 		});
 	}
 	
@@ -135,7 +143,13 @@ $(function() {
 			},
 			borderWidth: {
 				start: '5px',
-				end: '10px'
+				end: '100px'
+			}
+		},
+		'h2': {
+			letterSpacing: {
+				start: '0px',
+				end: '40px'
 			}
 		}
 	});
