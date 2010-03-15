@@ -70,7 +70,8 @@ var ScrollAnimator = function(definitions) {
 		}
 		var css = {};
 		css[attribute] = 'rgb('+c.r+','+c.g+','+c.b+')';
-		$(selector).css(css);
+		$(selector).css(css); // NOTE:  let's see if we can pre-query all the selectors
+													 //				 so we don't run the same query over and over
 	}
 	
 	function animateValue(selector, attribute, options) {
@@ -118,3 +119,15 @@ ScrollAnimator({
 		}
 	}
 });
+
+// proposed future syntax:
+/*
+$(window).scrollAnimate({
+	'body': {
+		color: {
+			start: 'black',
+			end: 'white'
+		}
+	}
+});
+*/
