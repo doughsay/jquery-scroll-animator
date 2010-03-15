@@ -83,7 +83,6 @@ var ScrollAnimator = function(definitions) {
 	function onScroll() {
 		height = d.height() - w.height();
 		position = w.scrollTop() / height;
-		negPosition = (position - 1) * -1;
 		
 		$.each(definitions, function(selector, attributes) {
 			$.each(attributes, function(attribute, options) {
@@ -93,31 +92,52 @@ var ScrollAnimator = function(definitions) {
 		
 	}
 	
+	/// Initialization ///
+	
+	function init() {
+		console.log('init!');
+		$.each(definitions, function(selector, attributes) {
+			var css = {};
+			$.each(attributes, function(attribute, options) {
+				css[attribute] = options.start;
+			});
+			console.log(selector, css);
+			$(selector).css(css);
+		});
+	}
+	
+	init();
 	$(window).scroll(onScroll);
 	
 }
 
-ScrollAnimator({
-	'body': {
-		backgroundColor: {
-			start: 'black',
-			end: 'rgb(255,165,0)'
+$(function() {
+	ScrollAnimator({
+		'body': {
+			backgroundColor: {
+				start: 'black',
+				end: 'rgb(255,165,0)'
+			},
+			color: {
+				start: '#000000',
+				end: 'orange'
+			}
 		},
-		color: {
-			start: '#000000',
-			end: 'orange'
+		'#Container': {
+			backgroundColor: {
+				start: 'dodgerblue',
+				end: 'black'
+			},
+			borderColor: {
+				start: 'rgb(100%,100%,100%)',
+				end: 'dodgerblue'
+			},
+			borderWidth: {
+				start: '5px',
+				end: '10px'
+			}
 		}
-	},
-	'#Container': {
-		backgroundColor: {
-			start: 'dodgerblue',
-			end: 'black'
-		},
-		borderColor: {
-			start: 'rgb(100%,100%,100%)',
-			end: 'dodgerblue'
-		}
-	}
+	});
 });
 
 // proposed future syntax:

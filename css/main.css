@@ -1,5 +1,4 @@
 body {
-	background-color: black;
 	font-family: sans-serif;
 }
 
@@ -20,8 +19,7 @@ p {
 #Container {
 	margin: 0 auto;
 	width: 600px;
-	border: 5px solid #808080;
-	background-color: rgb(64,64,255);
+	border-style: solid;
 	padding: 20px;
 }
 
