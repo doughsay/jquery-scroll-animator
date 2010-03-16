@@ -1,8 +1,7 @@
 jQuery.fn.scrollAnimate = function(definitions) {
 	
 	/// Globals ///
-	var w = $(window), d = $(document),
-	height, position;
+	var w = $(window), d = $(document), position = {x: 0, y: 0};
 	
 	/// Utility functions ///
 	
@@ -184,13 +183,21 @@ jQuery.fn.scrollAnimate = function(definitions) {
 		return a ? a : b;
 	}
 	
-	function val(start, end) {
+	function getPosition() {
+		var height = d.height() - w.height();
+		var width = d.width() - w.width();
+		position.y = w.scrollTop() / height;
+		position.x = w.scrollLeft() / width;
+	}
+	
+	function val(start, end, axis) {
+		if(axis === undefined) axis = 'y';
 		if(end > start) {
 			var diff = end - start;
-			return start + (diff * position)
+			return start + (diff * position[axis])
 		} else if(start > end) {
 			var diff = start - end;
-			return (diff * (position - 1) * -1) + end;
+			return (diff * (position[axis] - 1) * -1) + end;
 		} else {
 			return start;
 		}
@@ -207,9 +214,9 @@ jQuery.fn.scrollAnimate = function(definitions) {
 		var start = getColorFromString(options.start);
 		var end = getColorFromString(options.end);
 		var c = {
-			r: Math.round(val(start.r, end.r)),
-			g: Math.round(val(start.g, end.g)),
-			b: Math.round(val(start.b, end.b))
+			r: Math.round(val(start.r, end.r, options.axis)),
+			g: Math.round(val(start.g, end.g, options.axis)),
+			b: Math.round(val(start.b, end.b, options.axis))
 		}
 		return 'rgb('+c.r+','+c.g+','+c.b+')';
 	}
@@ -235,7 +242,7 @@ jQuery.fn.scrollAnimate = function(definitions) {
 				throw "Sorry, I don't (yet) support unmatched units "
 					+ startUnit + " and " + endUnit;
 				
-					newVals[i] = val(startVal, endVal).toFixed(2) + startUnit;
+					newVals[i] = val(startVal, endVal, options.axis).toFixed(2) + startUnit;
 		}
 				
 		return newVals.join(' ');
@@ -244,8 +251,7 @@ jQuery.fn.scrollAnimate = function(definitions) {
 	/// Scroll Callback ///
 	
 	function onScroll() {
-		height = d.height() - w.height();
-		position = w.scrollTop() / height;
+		getPosition();
 		
 		$.each(definitions, function(selector, attributes) {
 			var css = {};
@@ -260,13 +266,8 @@ jQuery.fn.scrollAnimate = function(definitions) {
 	/// Initialization ///
 	
 	function init() {
-		$.each(definitions, function(selector, attributes) {
-			var css = {};
-			$.each(attributes, function(attribute, options) {
-				css[attribute] = options.start;
-			});
-			$(selector).css(css);
-		});
+		getPosition();
+		onScroll();
 	}
 	
 	init();
