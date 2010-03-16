@@ -23,3 +23,20 @@ p {
 	padding: 20px;
 }
 
+#ff7 {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	background-image: url('../img/ff7.png');
+	width: 285px;
+	height: 200px;
+}
+
+#paint {
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	background-image: url('../img/paint.png');
+	width: 350px;
+	height: 360px;
+}

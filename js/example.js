@@ -60,6 +60,26 @@ $(function() { // onDomReady
 				start: '0px',
 				end: '40px'
 			}
+		},
+		'#ff7': {
+			opacity: {
+				start: '1.0',
+				end: '0.0'
+			},
+			top: {
+				start: '400px',
+				end: '20px'
+			}
+		},
+		'#paint': {
+			opacity: {
+				start: '0.0',
+				end: '1.0'
+			},
+			bottom: {
+				start: '400px',
+				end: '20px'
+			}
 		}
 	});
 	

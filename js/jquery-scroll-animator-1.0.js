@@ -180,6 +180,10 @@ jQuery.fn.scrollAnimate = function(definitions) {
 		return color;
 	}
 	
+	function fallback(a, b) {
+		return a ? a : b;
+	}
+	
 	function val(start, end) {
 		if(end > start) {
 			var diff = end - start;
@@ -211,19 +215,19 @@ jQuery.fn.scrollAnimate = function(definitions) {
 	}
 	
 	function animateValue(options) {
-		var regex = /^([.0-9]+)(%|in|cm|mm|em|ex|pt|pc|px)$/
+		var regex = /^([.0-9]+)(|%|in|cm|mm|em|ex|pt|pc|px)$/
 		var startMatchData = regex.exec(options.start);
 		var startVal = parseInt(startMatchData[1]);
-		var startUnit = startMatchData[2];
+		var startUnit = fallback(startMatchData[2], '');
 		var endMatchData = regex.exec(options.end);
 		var endVal = parseInt(endMatchData[1]);
-		var endUnit = endMatchData[2];
+		var endUnit = fallback(endMatchData[2], '');
 		
 		if(startUnit !== endUnit)
 			throw "Sorry, I don't (yet) support unmatched units "
 				+ startUnit + " and " + endUnit;
 				
-		return Math.round(val(startVal, endVal)) + startUnit;
+		return val(startVal, endVal).toFixed(2) + startUnit;
 	}
 	
 	/// Scroll Callback ///
