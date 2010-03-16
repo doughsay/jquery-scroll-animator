@@ -1,7 +1,8 @@
-jQuery.fn.scrollAnimate = function(definitions) {
+jQuery.fn.scrollAnimate = function(definitions, smooth) {
 	
 	/// Globals ///
 	var w = $(window), d = $(document), position = {x: 0, y: 0};
+	if(smooth === undefined) smooth = false;
 	
 	/// Utility functions ///
 	
@@ -258,7 +259,10 @@ jQuery.fn.scrollAnimate = function(definitions) {
 			$.each(attributes, function(attribute, options) {
 				css[attribute] = animate(attribute, options);
 			});
-			$(selector).css(css);
+			if(smooth)
+				$(selector).animate(css, {queue: false, duration: 100});
+			else
+				$(selector).css(css);
 		});
 		
 	}
