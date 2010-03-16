@@ -1,0 +1,45 @@
+body {
+	font-family: sans-serif;
+	background-image: url('../img/concrete.jpg');
+	background-attachment: fixed;
+}
+
+h1 {
+	font-size: x-large;
+	text-align: center;
+}
+
+h2 {
+	font-size: large;
+	text-align: center;
+}
+
+p {
+	text-align: justify;
+}
+
+.stripes {
+	width: 40px;
+	height: 100%;
+	position: fixed;
+	top: 0;
+}
+
+#a.stripes {
+	left: 0;
+	background-image: url('../img/stripes_a.png');
+}
+
+#b.stripes {
+	right: 0;
+	background-image: url('../img/stripes_b.png');
+}
+
+#Container {
+	margin: 0 auto;
+	width: 600px;
+	border: 5px solid gray;
+	padding: 20px;
+	background-color: white;
+	opacity: 0.75;
+}

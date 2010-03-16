@@ -215,19 +215,30 @@ jQuery.fn.scrollAnimate = function(definitions) {
 	}
 	
 	function animateValue(options) {
+		var startVals = options.start.split(' ');
+		var endVals = options.end.split(' ');
 		var regex = /^([.0-9]+)(|%|in|cm|mm|em|ex|pt|pc|px)$/
-		var startMatchData = regex.exec(options.start);
-		var startVal = parseInt(startMatchData[1]);
-		var startUnit = fallback(startMatchData[2], '');
-		var endMatchData = regex.exec(options.end);
-		var endVal = parseInt(endMatchData[1]);
-		var endUnit = fallback(endMatchData[2], '');
+		var newVals = [];
 		
-		if(startUnit !== endUnit)
-			throw "Sorry, I don't (yet) support unmatched units "
-				+ startUnit + " and " + endUnit;
+		if(startVals.length !== endVals.length)
+			throw "The number of start values and end values does not match";
+		
+		for(var i = 0, L = startVals.length; i < L; i++) {
+			var startMatchData = regex.exec(startVals[i]);
+			var startVal = parseInt(startMatchData[1]);
+			var startUnit = fallback(startMatchData[2], '');
+			var endMatchData = regex.exec(endVals[i]);
+			var endVal = parseInt(endMatchData[1]);
+			var endUnit = fallback(endMatchData[2], '');
+			
+			if(startUnit !== endUnit)
+				throw "Sorry, I don't (yet) support unmatched units "
+					+ startUnit + " and " + endUnit;
 				
-		return val(startVal, endVal).toFixed(2) + startUnit;
+					newVals[i] = val(startVal, endVal).toFixed(2) + startUnit;
+		}
+				
+		return newVals.join(' ');
 	}
 	
 	/// Scroll Callback ///
